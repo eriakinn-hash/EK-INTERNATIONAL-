@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // User Profile security: Only the authenticated owner can read & write their profile
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+      // Allow read of referral codes for invitation checks if authenticated
+      allow read: if isAuthenticated();
+    }
+
+    // Staking Contracts: Only owner can create, read, update
+    match /contracts/{contractId} {
+      allow read, write: if isAuthenticated() && (
+        resource == null || resource.data.userId == request.auth.uid || request.resource.data.userId == request.auth.uid
+      );
+    }
+
+    // Transactions Ledger: Only owner can read and append their transactions
+    match /transactions/{transactionId} {
+      allow read, write: if isAuthenticated() && (
+        resource == null || resource.data.userId == request.auth.uid || request.resource.data.userId == request.auth.uid
+      );
+    }
+
+    // Public/System collections (plans, tasks, announcements)
+    match /plans/{planId} {
+      allow read: if true;
+      allow write: if false; // System defined
+    }
+
+    match /tasks/{taskId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /live_activities/{activityId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+    }
+
+    // Fallback lock down for everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

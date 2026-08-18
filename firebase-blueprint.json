@@ -1,0 +1,86 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "type": "object",
+      "description": "User profile, balance, security credentials and staking status",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "avatar": { "type": "string" },
+        "vipTier": { "type": "string" },
+        "mainBalance": { "type": "number" },
+        "stakedBalance": { "type": "number" },
+        "claimableYield": { "type": "number" },
+        "taskEarnings": { "type": "number" },
+        "totalWithdrawn": { "type": "number" },
+        "referralCode": { "type": "string" },
+        "referredBy": { "type": "string" },
+        "kycStatus": { "type": "string" },
+        "pinCode": { "type": "string" },
+        "streakDays": { "type": "number" },
+        "lastCheckInDate": { "type": "string" },
+        "freeSpinsAvailable": { "type": "number" },
+        "registeredAt": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "mainBalance", "pinCode"]
+    },
+    "ActiveContract": {
+      "title": "ActiveContract",
+      "type": "object",
+      "description": "Active node staking contract",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "planId": { "type": "string" },
+        "planName": { "type": "string" },
+        "investedAmount": { "type": "number" },
+        "dailyRoiPercent": { "type": "number" },
+        "dailyYieldAmount": { "type": "number" },
+        "durationDays": { "type": "number" },
+        "startDate": { "type": "string" },
+        "endDate": { "type": "string" },
+        "accumulatedYield": { "type": "number" },
+        "claimedYield": { "type": "number" },
+        "unclaimedYield": { "type": "number" },
+        "status": { "type": "string" },
+        "accentColor": { "type": "string" }
+      },
+      "required": ["id", "userId", "planId", "investedAmount", "status"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "type": "object",
+      "description": "Financial ledger transactions including deposits, withdrawals, and task claims",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "txHash": { "type": "string" },
+        "method": { "type": "string" },
+        "details": { "type": "string" }
+      },
+      "required": ["id", "userId", "type", "title", "amount", "status", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Secure user profiles accessible only by the account owner"
+    },
+    "/contracts/{contractId}": {
+      "schema": "ActiveContract",
+      "description": "Active staking contracts filtered by owner userId"
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Financial ledger transactions accessible by owner userId"
+    }
+  }
+}

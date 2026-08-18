@@ -1,0 +1,6 @@
+{
+  "name": "EKWorld Games",
+  "description": "Digital platform bringing together entertainment, interactive super tasks, tiered investment participation plans, and real-time yield monitoring.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
